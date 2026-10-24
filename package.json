@@ -1,0 +1,55 @@
+{
+  "name": "mcp-argguard",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Defensive runtime policy proxy that checks MCP tools/call arguments before they reach a server.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "bin": {
+    "mcp-argguard": "./dist/cli/main.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "policies",
+    "README.md",
+    "README.tr.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alikesk222/mcp-argguard.git"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json --noEmit",
+    "lint": "biome ci .",
+    "format": "biome check --write .",
+    "test": "tsc -p tsconfig.json && vitest run",
+    "test:fuzz": "ARGGUARD_FUZZ_RUNS=400 vitest run test/fuzz",
+    "prepublishOnly": "echo 'mcp-argguard is not published. See README.' && exit 1"
+  },
+  "dependencies": {
+    "picomatch": "^4.0.3",
+    "yaml": "^2.8.1",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.6",
+    "@modelcontextprotocol/client": "2.4.0",
+    "@modelcontextprotocol/server": "2.4.0",
+    "@types/node": "^24.9.1",
+    "@types/picomatch": "^4.0.2",
+    "fast-check": "^4.3.0",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.5"
+  }
+}

@@ -1,0 +1,16 @@
+# Starter profile is closed. `pwd` with no arguments is the only allowed tool.
+# Everything else, including a glob at the end, is denied. Opt in by copying
+# this file and naming the exact tools you want.
+version: 1
+mode: enforce
+defaults:
+  tool: deny
+  unknown_args: deny
+servers:
+  shell:
+    tools:
+      pwd:
+        decision: allow
+      "*":
+        decision: deny
+        reason: "starter shell profile allows only pwd"
