@@ -46,7 +46,7 @@
     "@biomejs/biome": "^2.2.6",
     "@modelcontextprotocol/client": "2.4.0",
     "@modelcontextprotocol/server": "2.4.0",
-    "@types/node": "^24.9.1",
+    "@types/node": "^26.6.5",
     "@types/picomatch": "^4.0.2",
     "fast-check": "^4.3.0",
     "typescript": "^5.9.3",
