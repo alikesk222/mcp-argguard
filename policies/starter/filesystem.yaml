@@ -1,0 +1,30 @@
+# Starter profile: read files inside the workspace, never delete, never touch
+# secret material paths. Copy it and edit `within` before use.
+version: 1
+mode: enforce
+defaults:
+  tool: deny
+  unknown_args: deny
+secrets:
+  - id: aws-access-key
+    regex: "AKIA[0-9A-Z]{16}"
+  - id: private-key-block
+    regex: "-----BEGIN [A-Z ]*PRIVATE KEY-----"
+servers:
+  filesystem:
+    tools:
+      read_file:
+        decision: allow
+        args:
+          path:
+            type: path
+            within: ["${workspace}"]
+            deny:
+              - "**/.env*"
+              - "**/.ssh/**"
+              - "**/*.pem"
+              - "**/*.key"
+            resolve_symlinks: true
+      "delete_*":
+        decision: deny
+        reason: "starter profile disables deletion"

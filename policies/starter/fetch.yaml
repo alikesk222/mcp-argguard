@@ -1,0 +1,24 @@
+# Starter profile: HTTPS fetches to an explicit host allowlist.
+# Private, loopback, link-local, and metadata addresses are rejected.
+# DNS rebinding is out of scope: names are not resolved.
+version: 1
+mode: enforce
+defaults:
+  tool: deny
+  unknown_args: deny
+secrets:
+  - id: aws-access-key
+    regex: "AKIA[0-9A-Z]{16}"
+  - id: private-key-block
+    regex: "-----BEGIN [A-Z ]*PRIVATE KEY-----"
+servers:
+  fetch:
+    tools:
+      fetch:
+        decision: allow
+        args:
+          url:
+            type: url
+            schemes: ["https"]
+            hosts: ["docs.python.org", "*.github.com"]
+            deny_private_ranges: true

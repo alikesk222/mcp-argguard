@@ -1,0 +1,58 @@
+# Combined example. Replace hosts and roots before use.
+# `broker_hostname` and the rabbimq_* tool ids are taken from GHSA-xwj6-8x5h-hjp6.
+# They were not re-parsed from the server package. The hostname pattern is an example.
+version: 1
+mode: enforce
+defaults:
+  tool: deny
+  unknown_args: deny
+limits:
+  max_message_bytes: 1048576
+log:
+  path: ~/.argguard/decisions.jsonl
+  store_args: hashed
+  redact_keys: [password, token, secret, authorization, api_key]
+secrets:
+  - id: aws-access-key
+    regex: "AKIA[0-9A-Z]{16}"
+  - id: private-key-block
+    regex: "-----BEGIN [A-Z ]*PRIVATE KEY-----"
+servers:
+  amazon-mq:
+    tools:
+      "rabbimq_broker_initialize_connection*":
+        decision: allow
+        args:
+          broker_hostname:
+            type: hostname
+            allow: ["b-*.mq.eu-central-1.amazonaws.com"]
+            deny_ip_literals: true
+  fetch:
+    tools:
+      fetch:
+        decision: allow
+        args:
+          url:
+            type: url
+            schemes: [https]
+            hosts: ["docs.python.org", "*.github.com"]
+            deny_private_ranges: true
+  filesystem:
+    tools:
+      read_file:
+        decision: allow
+        args:
+          path:
+            type: path
+            within: ["${workspace}"]
+            deny: ["**/.env*", "**/.ssh/**", "**/*.pem"]
+            resolve_symlinks: true
+      "delete_*":
+        decision: deny
+        reason: "deletion is disabled in this profile"
+launch:
+  deny_inline_code:
+    - { command: npx, flags: ["-c", "--call"] }
+    - { command: node, flags: ["-e", "--eval", "-p"] }
+    - { command: python, flags: ["-c"] }
+    - { command: bash, flags: ["-c"] }
